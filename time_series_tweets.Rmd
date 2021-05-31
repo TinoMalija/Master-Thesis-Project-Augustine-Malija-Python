@@ -1,0 +1,48 @@
+---
+title: "time_series_tweets"
+output: html_document
+---
+```{r}
+#loading libraries
+library(dplyr)
+library(ggplot2)
+```
+
+```{r setup, include=FALSE}
+monthly_counts <- read.csv("monthly_counts.csv") %>% 
+  #replacing with real names of classes
+  mutate(classes = case_when(
+        classes == "1" ~ "In Favor",
+        classes == "2" ~ "Against",
+        classes == "3" ~ "Neutral"))
+```
+
+
+
+
+```{r cars}
+#plotting
+ggplot(monthly_counts,
+       #specifying axes and color baseline
+       aes(x = month, y = counts, group = classes, color = classes)) +
+  #picking a line graph
+  geom_line()+
+  #adding points at every month stop
+  geom_point(alpha = 0.8,
+             size = 0.8)+
+  #making the background of the plot lighter
+  theme_light()+
+  #leaving the shape of lines to be determined by variables
+  scale_shape_discrete(name = "classes")+
+  #leaving lines to be determined by variables
+  scale_linetype_discrete(name = "classes")+
+  #naming the axes
+  labs(title = "Evolution of Climate Tweet Stances",
+       x = "Month",
+       y = "Frequencies per Class")+
+  #removing axis ticks on numbers
+  theme(axis.ticks = element_blank())+
+#saving as png
+ggsave("Evolution of Stances.png", width = 17, dpi = 400)
+```
+
